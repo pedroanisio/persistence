@@ -48,7 +48,7 @@ class App {
    */
   private async loadArticle(): Promise<ArticleData> {
     try {
-      const response = await fetch('/article.json');
+      const response = await fetch('/article-v2.json');
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -59,7 +59,7 @@ class App {
 
     } catch (error) {
       if (error instanceof TypeError) {
-        throw new Error('Failed to fetch article.json. Make sure the development server is running.');
+        throw new Error('Failed to fetch article-v2.json. Make sure the development server is running.');
       }
       throw new Error(`Failed to load article: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
