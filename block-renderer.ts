@@ -1,6 +1,6 @@
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
-import {
+import type {
   ContentBlock,
   TextBlock,
   ListBlock,
@@ -13,7 +13,10 @@ import {
   SeparatorBlock,
   ReferenceBlock,
   InteractiveBlock,
-  BlockStyle,
+  BlockStyle
+} from './article/index';
+
+import {
   isTextBlock,
   isListBlock,
   isTableBlock,
@@ -25,7 +28,7 @@ import {
   isSeparatorBlock,
   isReferenceBlock,
   isInteractiveBlock
-} from './article';
+} from './article/index';
 
 export class BlockRenderer {
   private applyBlockStyle(element: HTMLElement, style?: BlockStyle): void {
