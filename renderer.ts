@@ -201,6 +201,39 @@ export class ArticleRenderer {
   private renderMarkdown(markdown: string): string {
     let html = markdown;
 
+    // Code blocks first (to protect content from other processing)
+    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Process blockquotes with multi-line support
+    const lines = html.split('\n');
+    const processedLines: string[] = [];
+    let inBlockquote = false;
+    let blockquoteContent: string[] = [];
+
+    for (const line of lines) {
+      if (line.startsWith('> ') || line.startsWith('&gt; ')) {
+        const content = line.replace(/^(&gt;|>) /, '');
+        blockquoteContent.push(content);
+        inBlockquote = true;
+      } else {
+        if (inBlockquote) {
+          processedLines.push('<blockquote>' + blockquoteContent.join('\n') + '</blockquote>');
+          blockquoteContent = [];
+          inBlockquote = false;
+        }
+        processedLines.push(line);
+      }
+    }
+
+    if (inBlockquote) {
+      processedLines.push('<blockquote>' + blockquoteContent.join('\n') + '</blockquote>');
+    }
+
+    html = processedLines.join('\n');
+
     // Headers (from h5 to h1 to avoid conflicts)
     html = html.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
     html = html.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
@@ -208,11 +241,11 @@ export class ArticleRenderer {
     html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
     html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
 
-    // Bold
+    // Bold (before italic to handle **)
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
     // Italic
-    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    html = html.replace(/(?<!\*)\*(?!\*)([^*]+)\*(?!\*)/g, '<em>$1</em>');
 
     // Links
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
@@ -220,16 +253,6 @@ export class ArticleRenderer {
     // Images with alt text and width
     html = html.replace(/!\[([^\]]*)\]\(([^)]+)\s+"([^"]+)"\)/g, '<img src="$2" alt="$1" title="$3">');
     html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
-
-    // Code blocks
-    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-
-    // Inline code
-    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-    // Blockquotes (multi-line support)
-    html = html.replace(/^&gt; (.+)$/gim, '<blockquote>$1</blockquote>');
-    html = html.replace(/^> (.+)$/gim, '<blockquote>$1</blockquote>');
 
     // Lists
     html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');
