@@ -99,6 +99,8 @@ export function isValidArticleData(value: unknown): value is ArticleData {
   return (
     typeof data.title === 'string' &&
     Array.isArray(data.sections) &&
-    data.sections.every(isValidSection)
+    data.sections.every(isValidSection) &&
+    (data.subtitle === undefined || typeof data.subtitle === 'string') &&
+    (data.version === undefined || typeof data.version === 'string')
   );
 }

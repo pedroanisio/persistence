@@ -327,6 +327,7 @@ export interface RenderOptions {
 
 export interface ArticleData {
   readonly title: string;
+  readonly subtitle?: string;
   readonly version?: string;
   readonly metadata?: DocumentMetadata;
   readonly sections: readonly Section[];
@@ -334,6 +335,7 @@ export interface ArticleData {
   readonly tableOfContents?: readonly TOCEntry[];
   readonly readingPaths?: readonly ReadingPath[];
   readonly settings?: DocumentSettings;
+  readonly styles?: any;
   readonly globalStyles?: StyleSet;
   readonly annotations?: readonly Annotation[];
 }
