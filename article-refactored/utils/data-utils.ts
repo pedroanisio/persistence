@@ -19,8 +19,12 @@ import { isChapterSection, hasDifficulty } from '../guards/type-guards';
 export function extractAllReferences(article: ArticleData): readonly Reference[] {
   const references: Reference[] = [];
   article.sections.forEach(section => {
-    if ('references' in section && section.references) {
-      references.push(...section.references);
+    if ('references' in section && section.references && Array.isArray(section.references)) {
+      section.references.forEach(ref => {
+        if ('number' in ref && 'text' in ref) {
+          references.push(ref as Reference);
+        }
+      });
     }
   });
   return references;

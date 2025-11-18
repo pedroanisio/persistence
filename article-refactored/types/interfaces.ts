@@ -71,16 +71,19 @@ export interface TitleSection extends BaseSection {
 }
 
 export interface ContentSection extends BaseSection {
-  readonly type: SectionType.CONTENT;
+  readonly type?: SectionType.CONTENT;
   readonly difficulty: DifficultyLevel;
   readonly subsections?: readonly SubSection[];
   readonly references?: readonly Reference[];
 }
 
-export interface ChapterSection extends ContentSection {
+export interface ChapterSection extends BaseSection {
   readonly type: SectionType.CHAPTER;
+  readonly difficulty: DifficultyLevel;
   readonly chapterNumber: number;
   readonly partNumber?: number;
+  readonly subsections?: readonly SubSection[];
+  readonly references?: readonly Reference[];
   readonly exercises?: readonly Exercise[];
   readonly keyTakeaways?: readonly string[];
 }
@@ -330,8 +333,8 @@ export interface RenderOptions {
 
 export interface ArticleData {
   readonly title: string;
-  readonly version: string;
-  readonly metadata: DocumentMetadata;
+  readonly version?: string;
+  readonly metadata?: DocumentMetadata;
   readonly sections: readonly Section[];
   readonly images?: DeepReadonly<Record<string, EmbeddedImage>>;
   readonly tableOfContents?: readonly TOCEntry[];

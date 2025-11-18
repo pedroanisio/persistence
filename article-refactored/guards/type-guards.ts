@@ -99,9 +99,6 @@ export function isValidArticleData(value: unknown): value is ArticleData {
 
   return (
     typeof data.title === 'string' &&
-    typeof data.version === 'string' &&
-    typeof data.metadata === 'object' &&
-    data.metadata !== null &&
     Array.isArray(data.sections) &&
     data.sections.every(isValidSection)
   );

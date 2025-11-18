@@ -150,7 +150,7 @@ export function createDefaultValidator(): ArticleValidator {
  * @throws {Error} if validation fails
  */
 export function validateArticleData(data: unknown): asserts data is ArticleData {
-  const validator = createDefaultValidator();
+  const validator: ArticleValidator = createDefaultValidator();
   validator.validate(data);
 }
 

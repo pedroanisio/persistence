@@ -57,19 +57,19 @@ export class ArticleRenderer {
       const meta = document.createElement('div');
       meta.className = 'article-meta';
 
-      if (this.article.metadata.authors && this.article.metadata.authors.length > 0) {
+      if (this.article.metadata?.authors && this.article.metadata.authors.length > 0) {
         const authors = document.createElement('p');
         authors.textContent = `By ${this.article.metadata.authors.map(a => a.name).join(', ')}`;
         meta.appendChild(authors);
       }
 
-      if (this.article.metadata.created) {
+      if (this.article.metadata?.created) {
         const date = document.createElement('p');
-        date.textContent = `Version ${this.article.version} • ${new Date(this.article.metadata.created).toLocaleDateString()}`;
+        date.textContent = `Version ${this.article.version || '1.0'} • ${new Date(this.article.metadata.created).toLocaleDateString()}`;
         meta.appendChild(date);
       }
 
-      if (this.article.metadata.description) {
+      if (this.article.metadata?.description) {
         const desc = document.createElement('p');
         desc.textContent = this.article.metadata.description;
         desc.style.marginTop = '1rem';
