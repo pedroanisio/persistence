@@ -1,5 +1,5 @@
-import type { ArticleData } from './article';
-import { validateArticleData } from './article';
+import type { ArticleData } from './article/index';
+import { validateArticleData } from './article/index';
 import { ArticleRenderer } from './renderer';
 
 /**

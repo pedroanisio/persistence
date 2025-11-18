@@ -3,13 +3,13 @@ import type {
   Section,
   ChapterSection,
   DifficultyLevel,
-} from './article';
+} from './article/index';
 
 import {
   isChapterSection,
   DIFFICULTY_BADGES,
   getTotalReadingTime,
-} from './article';
+} from './article/index';
 
 /**
  * Renderer class for the Article system
