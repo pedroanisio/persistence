@@ -1,9 +1,8 @@
 /**
  * Type Guards Module
- * Single Responsibility: Runtime type checking with DRY principles
+ * Single Responsibility: Runtime type checking
  *
- * This module uses factory functions to eliminate code duplication
- * Reduces ~53 lines of repetitive code to ~15 lines
+ * Uses factory functions to eliminate code duplication
  */
 
 import { DifficultyLevel, SectionType } from '../types/enums';

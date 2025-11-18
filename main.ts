@@ -1,10 +1,9 @@
-import type { ArticleData } from './article-refactored';
-import { validateArticleData } from './article-refactored';
+import type { ArticleData } from './article';
+import { validateArticleData } from './article';
 import { ArticleRenderer } from './renderer';
 
 /**
  * Main application entry point
- * Uses the refactored modular article type system
  */
 class App {
   private article: ArticleData | null = null;
@@ -17,7 +16,7 @@ class App {
       // Load article data
       this.article = await this.loadArticle();
 
-      // Validate article data using the refactored validator
+      // Validate article data
       validateArticleData(this.article);
 
       console.log('✅ Article loaded and validated successfully');

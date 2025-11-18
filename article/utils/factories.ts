@@ -3,7 +3,6 @@
  * Single Responsibility: Create immutable domain objects
  *
  * Uses deepFreeze utility to eliminate Object.freeze() duplication
- * Reduces code by ~66% compared to manual freezing
  */
 
 import { DifficultyLevel, SectionType, PublicationType } from '../types/enums';
