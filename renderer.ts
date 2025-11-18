@@ -57,19 +57,19 @@ export class ArticleRenderer {
       const meta = document.createElement('div');
       meta.className = 'article-meta';
 
-      if (this.article.metadata.authors && this.article.metadata.authors.length > 0) {
+      if (this.article.metadata?.authors && this.article.metadata.authors.length > 0) {
         const authors = document.createElement('p');
         authors.textContent = `By ${this.article.metadata.authors.map(a => a.name).join(', ')}`;
         meta.appendChild(authors);
       }
 
-      if (this.article.metadata.created) {
+      if (this.article.metadata?.created) {
         const date = document.createElement('p');
-        date.textContent = `Version ${this.article.version} • ${new Date(this.article.metadata.created).toLocaleDateString()}`;
+        date.textContent = `Version ${this.article.version || '1.0'} • ${new Date(this.article.metadata.created).toLocaleDateString()}`;
         meta.appendChild(date);
       }
 
-      if (this.article.metadata.description) {
+      if (this.article.metadata?.description) {
         const desc = document.createElement('p');
         desc.textContent = this.article.metadata.description;
         desc.style.marginTop = '1rem';
@@ -196,10 +196,193 @@ export class ArticleRenderer {
   }
 
   /**
+   * Process markdown tables
+   */
+  private processTables(text: string): string {
+    const lines = text.split('\n');
+    const result: string[] = [];
+    let inTable = false;
+    let tableRows: string[] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const currentLine = lines[i];
+      if (!currentLine) continue;
+
+      const line = currentLine.trim();
+
+      // Check if this is a table row (contains pipes)
+      if (line.includes('|')) {
+        const nextLineRaw = i + 1 < lines.length ? lines[i + 1] : null;
+        const nextLine = nextLineRaw ? nextLineRaw.trim() : '';
+        const isHeaderSeparator = /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?\s*$/.test(nextLine);
+
+        if (!inTable) {
+          inTable = true;
+          tableRows = [];
+        }
+
+        // Skip separator rows
+        if (/^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?\s*$/.test(line)) {
+          continue;
+        }
+
+        const cells = line.split('|').map(cell => cell.trim()).filter(cell => cell);
+        const nextLineToCheck = i + 1 < lines.length ? lines[i + 1] : null;
+        const isHeader = isHeaderSeparator || (nextLineToCheck && /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?\s*$/.test(nextLineToCheck.trim()));
+
+        if (isHeader) {
+          const headerCells = cells.map(cell => `<th>${cell}</th>`).join('');
+          tableRows.push(`<tr>${headerCells}</tr>`);
+        } else {
+          const dataCells = cells.map(cell => `<td>${cell}</td>`).join('');
+          tableRows.push(`<tr>${dataCells}</tr>`);
+        }
+      } else {
+        if (inTable) {
+          // End of table
+          result.push('<table>' + tableRows.join('') + '</table>');
+          tableRows = [];
+          inTable = false;
+        }
+        result.push(line);
+      }
+    }
+
+    if (inTable && tableRows.length > 0) {
+      result.push('<table>' + tableRows.join('') + '</table>');
+    }
+
+    return result.join('\n');
+  }
+
+  /**
    * Render markdown content to HTML
    */
   private renderMarkdown(markdown: string): string {
     let html = markdown;
+
+    // Code blocks first (to protect content from other processing)
+    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Process blockquotes with multi-line support (including nested blockquotes)
+    const lines = html.split('\n');
+    const processedLines: string[] = [];
+    let inBlockquote = false;
+    let blockquoteContent: string[] = [];
+    let isFirstLineInBlockquote = false;
+
+    for (const line of lines) {
+      // Check for blockquote markers (single or multiple levels)
+      const blockquoteMatch = line.match(/^((?:&gt;|>)\s*)+/);
+
+      if (blockquoteMatch) {
+        const markers = blockquoteMatch[0];
+        const content = line.substring(markers.length);
+
+        // Skip the first H1 in a blockquote (it duplicates the section title)
+        if (!inBlockquote) {
+          isFirstLineInBlockquote = true;
+          inBlockquote = true;
+        }
+
+        if (isFirstLineInBlockquote && content.trim().startsWith('# ')) {
+          isFirstLineInBlockquote = false;
+          continue; // Skip this line
+        }
+
+        isFirstLineInBlockquote = false;
+
+        // Count nesting level and add appropriate markers
+        const nestingLevel = (markers.match(/(&gt;|>)/g) || []).length;
+        if (nestingLevel > 1) {
+          // For nested blockquotes, preserve the inner markers
+          blockquoteContent.push('> '.repeat(nestingLevel - 1) + content);
+        } else {
+          blockquoteContent.push(content);
+        }
+      } else {
+        if (inBlockquote) {
+          // Recursively process nested blockquotes
+          let processedContent = blockquoteContent.join('\n');
+
+          // Process nested blockquotes
+          if (processedContent.includes('> ')) {
+            const nestedLines = processedContent.split('\n');
+            const nestedProcessed: string[] = [];
+            let inNested = false;
+            let nestedContent: string[] = [];
+
+            for (const nestedLine of nestedLines) {
+              if (nestedLine.startsWith('> ')) {
+                nestedContent.push(nestedLine.substring(2));
+                inNested = true;
+              } else {
+                if (inNested) {
+                  nestedProcessed.push('<blockquote>' + nestedContent.join('\n') + '</blockquote>');
+                  nestedContent = [];
+                  inNested = false;
+                }
+                nestedProcessed.push(nestedLine);
+              }
+            }
+
+            if (inNested) {
+              nestedProcessed.push('<blockquote>' + nestedContent.join('\n') + '</blockquote>');
+            }
+
+            processedContent = nestedProcessed.join('\n');
+          }
+
+          processedLines.push('<blockquote>' + processedContent + '</blockquote>');
+          blockquoteContent = [];
+          inBlockquote = false;
+          isFirstLineInBlockquote = false;
+        }
+        processedLines.push(line);
+      }
+    }
+
+    if (inBlockquote) {
+      let processedContent = blockquoteContent.join('\n');
+
+      // Process nested blockquotes
+      if (processedContent.includes('> ')) {
+        const nestedLines = processedContent.split('\n');
+        const nestedProcessed: string[] = [];
+        let inNested = false;
+        let nestedContent: string[] = [];
+
+        for (const nestedLine of nestedLines) {
+          if (nestedLine.startsWith('> ')) {
+            nestedContent.push(nestedLine.substring(2));
+            inNested = true;
+          } else {
+            if (inNested) {
+              nestedProcessed.push('<blockquote>' + nestedContent.join('\n') + '</blockquote>');
+              nestedContent = [];
+              inNested = false;
+            }
+            nestedProcessed.push(nestedLine);
+          }
+        }
+
+        if (inNested) {
+          nestedProcessed.push('<blockquote>' + nestedContent.join('\n') + '</blockquote>');
+        }
+
+        processedContent = nestedProcessed.join('\n');
+      }
+
+      processedLines.push('<blockquote>' + processedContent + '</blockquote>');
+    }
+
+    html = processedLines.join('\n');
+
+    // Process tables
+    html = this.processTables(html);
 
     // Headers (from h5 to h1 to avoid conflicts)
     html = html.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
@@ -208,11 +391,11 @@ export class ArticleRenderer {
     html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
     html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
 
-    // Bold
+    // Bold (before italic to handle **)
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
     // Italic
-    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    html = html.replace(/(?<!\*)\*(?!\*)([^*]+)\*(?!\*)/g, '<em>$1</em>');
 
     // Links
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
@@ -220,16 +403,6 @@ export class ArticleRenderer {
     // Images with alt text and width
     html = html.replace(/!\[([^\]]*)\]\(([^)]+)\s+"([^"]+)"\)/g, '<img src="$2" alt="$1" title="$3">');
     html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
-
-    // Code blocks
-    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-
-    // Inline code
-    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-    // Blockquotes (multi-line support)
-    html = html.replace(/^&gt; (.+)$/gim, '<blockquote>$1</blockquote>');
-    html = html.replace(/^> (.+)$/gim, '<blockquote>$1</blockquote>');
 
     // Lists
     html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');

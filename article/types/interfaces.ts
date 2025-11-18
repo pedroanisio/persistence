@@ -71,7 +71,7 @@ export interface TitleSection extends BaseSection {
 }
 
 export interface ContentSection extends BaseSection {
-  readonly type: SectionType.CONTENT;
+  readonly type?: SectionType.CONTENT;
   readonly difficulty: DifficultyLevel;
   readonly subsections?: readonly SubSection[];
   readonly references?: readonly Reference[];
@@ -333,8 +333,8 @@ export interface RenderOptions {
 
 export interface ArticleData {
   readonly title: string;
-  readonly version: string;
-  readonly metadata: DocumentMetadata;
+  readonly version?: string;
+  readonly metadata?: DocumentMetadata;
   readonly sections: readonly Section[];
   readonly images?: DeepReadonly<Record<string, EmbeddedImage>>;
   readonly tableOfContents?: readonly TOCEntry[];
