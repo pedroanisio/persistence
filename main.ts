@@ -148,12 +148,16 @@ class App {
   private showContent(show: boolean): void {
     const navigation = document.getElementById('navigation');
     const mainContent = document.getElementById('main-content');
+    const exportBtn = document.getElementById('export-pdf-btn');
 
     if (navigation) {
       navigation.style.display = show ? 'block' : 'none';
     }
     if (mainContent) {
       mainContent.style.display = show ? 'block' : 'none';
+    }
+    if (exportBtn) {
+      exportBtn.style.display = show ? 'block' : 'none';
     }
   }
 
