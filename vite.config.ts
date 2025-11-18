@@ -8,8 +8,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    assetsInlineLimit: 0,
   },
   resolve: {
     extensions: ['.ts', '.js', '.json'],
   },
+  publicDir: 'images',
 });

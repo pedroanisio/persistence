@@ -349,6 +349,9 @@ export class ArticleRenderer {
   private renderMarkdown(markdown: string): string {
     let html = markdown;
 
+    // Fix image paths from ../images/ to root /
+    html = html.replace(/src="\.\.\/images\//g, 'src="/');
+
     // Code blocks first (to protect content from other processing)
     html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
 
@@ -489,8 +492,14 @@ export class ArticleRenderer {
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
     // Images with alt text and width
-    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\s+"([^"]+)"\)/g, '<img src="$2" alt="$1" title="$3">');
-    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
+    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\s+"([^"]+)"\)/g, (match, alt, src, title) => {
+      const fixedSrc = src.replace(/^\.\.\/images\//, '/');
+      return `<img src="${fixedSrc}" alt="${alt}" title="${title}">`;
+    });
+    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
+      const fixedSrc = src.replace(/^\.\.\/images\//, '/');
+      return `<img src="${fixedSrc}" alt="${alt}">`;
+    });
 
     // Lists
     html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');
