@@ -41,6 +41,32 @@ export type {
   DeepReadonly
 } from './types/utility-types';
 
+// Content Blocks v2
+export type {
+  BaseBlock,
+  Typography,
+  Visual,
+  Layout,
+  BlockStyle,
+  Highlight,
+  Annotation,
+  TextBlock,
+  ListBlock,
+  ListItem,
+  TableBlock,
+  TableHeader,
+  MediaBlock,
+  CodeBlock,
+  MathBlock,
+  ContainerBlock,
+  GridBlock,
+  SeparatorBlock,
+  ReferenceBlock,
+  InteractiveBlock,
+  ContentBlock,
+  StyleSet
+} from './types/blocks';
+
 // Interfaces
 export type {
   // Metadata
@@ -109,6 +135,20 @@ export {
   isValidSection,
   isValidArticleData
 } from './guards/type-guards';
+
+export {
+  isTextBlock,
+  isListBlock,
+  isTableBlock,
+  isMediaBlock,
+  isCodeBlock,
+  isMathBlock,
+  isContainerBlock,
+  isGridBlock,
+  isSeparatorBlock,
+  isReferenceBlock,
+  isInteractiveBlock
+} from './guards/block-guards';
 
 // ============================================================================
 // VALIDATION

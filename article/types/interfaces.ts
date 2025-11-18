@@ -14,6 +14,7 @@ import {
   ExportFormat
 } from './enums';
 import { HexColor, CSSMeasurement, DeepReadonly } from './utility-types';
+import { ContentBlock, StyleSet, Annotation } from './blocks';
 
 // ============================================================================
 // METADATA INTERFACES
@@ -60,6 +61,9 @@ export interface BaseSection {
   readonly difficulty?: DifficultyLevel;
   readonly file?: string;
   readonly metadata?: SectionMetadata;
+  readonly blocks?: readonly ContentBlock[];
+  readonly styles?: StyleSet;
+  readonly annotations?: readonly Annotation[];
 }
 
 export interface TitleSection extends BaseSection {
@@ -237,16 +241,6 @@ export interface ReadingPathSection {
 // INTERACTIVE INTERFACES
 // ============================================================================
 
-export interface Annotation {
-  readonly id: string;
-  readonly sectionId: string;
-  readonly text: string;
-  readonly note: string;
-  readonly created: Date;
-  readonly modified?: Date;
-  readonly color?: HexColor;
-  readonly tags?: readonly string[];
-}
 
 export interface ReadingProgress {
   readonly currentSectionId: string;
@@ -340,4 +334,6 @@ export interface ArticleData {
   readonly tableOfContents?: readonly TOCEntry[];
   readonly readingPaths?: readonly ReadingPath[];
   readonly settings?: DocumentSettings;
+  readonly globalStyles?: StyleSet;
+  readonly annotations?: readonly Annotation[];
 }

@@ -10,6 +10,8 @@ import {
   DIFFICULTY_BADGES,
 } from './article/index';
 
+import { BlockRenderer } from './block-renderer';
+
 /**
  * Renderer class for the Article system
  */
@@ -18,6 +20,7 @@ export class ArticleRenderer {
   private mainContent: HTMLElement;
   private tocContainer: HTMLElement;
   private headerContainer: HTMLElement;
+  private blockRenderer: BlockRenderer;
 
   constructor(
     article: ArticleData,
@@ -29,6 +32,7 @@ export class ArticleRenderer {
     this.mainContent = mainContent;
     this.tocContainer = tocContainer;
     this.headerContainer = headerContainer;
+    this.blockRenderer = new BlockRenderer();
   }
 
   /**
@@ -248,7 +252,14 @@ export class ArticleRenderer {
     // Section content
     const content = document.createElement('div');
     content.className = 'section-content';
-    content.innerHTML = this.renderMarkdown(section.content);
+
+    if (section.blocks && section.blocks.length > 0) {
+      const blocksFragment = this.blockRenderer.renderBlocks(section.blocks);
+      content.appendChild(blocksFragment);
+    } else {
+      content.innerHTML = this.renderMarkdown(section.content);
+    }
+
     container.appendChild(content);
 
     // Special rendering for chapter sections
