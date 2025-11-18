@@ -267,7 +267,7 @@ export class ArticleRenderer {
     // Inline code
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-    // Process blockquotes with multi-line support
+    // Process blockquotes with multi-line support (including nested blockquotes)
     const lines = html.split('\n');
     const processedLines: string[] = [];
     let inBlockquote = false;
@@ -275,8 +275,12 @@ export class ArticleRenderer {
     let isFirstLineInBlockquote = false;
 
     for (const line of lines) {
-      if (line.startsWith('> ') || line.startsWith('&gt; ')) {
-        const content = line.replace(/^(&gt;|>) /, '');
+      // Check for blockquote markers (single or multiple levels)
+      const blockquoteMatch = line.match(/^((?:&gt;|>)\s*)+/);
+
+      if (blockquoteMatch) {
+        const markers = blockquoteMatch[0];
+        const content = line.substring(markers.length);
 
         // Skip the first H1 in a blockquote (it duplicates the section title)
         if (!inBlockquote) {
@@ -284,16 +288,55 @@ export class ArticleRenderer {
           inBlockquote = true;
         }
 
-        if (isFirstLineInBlockquote && content.startsWith('# ')) {
+        if (isFirstLineInBlockquote && content.trim().startsWith('# ')) {
           isFirstLineInBlockquote = false;
           continue; // Skip this line
         }
 
         isFirstLineInBlockquote = false;
-        blockquoteContent.push(content);
+
+        // Count nesting level and add appropriate markers
+        const nestingLevel = (markers.match(/(&gt;|>)/g) || []).length;
+        if (nestingLevel > 1) {
+          // For nested blockquotes, preserve the inner markers
+          blockquoteContent.push('> '.repeat(nestingLevel - 1) + content);
+        } else {
+          blockquoteContent.push(content);
+        }
       } else {
         if (inBlockquote) {
-          processedLines.push('<blockquote>' + blockquoteContent.join('\n') + '</blockquote>');
+          // Recursively process nested blockquotes
+          let processedContent = blockquoteContent.join('\n');
+
+          // Process nested blockquotes
+          if (processedContent.includes('> ')) {
+            const nestedLines = processedContent.split('\n');
+            const nestedProcessed: string[] = [];
+            let inNested = false;
+            let nestedContent: string[] = [];
+
+            for (const nestedLine of nestedLines) {
+              if (nestedLine.startsWith('> ')) {
+                nestedContent.push(nestedLine.substring(2));
+                inNested = true;
+              } else {
+                if (inNested) {
+                  nestedProcessed.push('<blockquote>' + nestedContent.join('\n') + '</blockquote>');
+                  nestedContent = [];
+                  inNested = false;
+                }
+                nestedProcessed.push(nestedLine);
+              }
+            }
+
+            if (inNested) {
+              nestedProcessed.push('<blockquote>' + nestedContent.join('\n') + '</blockquote>');
+            }
+
+            processedContent = nestedProcessed.join('\n');
+          }
+
+          processedLines.push('<blockquote>' + processedContent + '</blockquote>');
           blockquoteContent = [];
           inBlockquote = false;
           isFirstLineInBlockquote = false;
@@ -303,7 +346,37 @@ export class ArticleRenderer {
     }
 
     if (inBlockquote) {
-      processedLines.push('<blockquote>' + blockquoteContent.join('\n') + '</blockquote>');
+      let processedContent = blockquoteContent.join('\n');
+
+      // Process nested blockquotes
+      if (processedContent.includes('> ')) {
+        const nestedLines = processedContent.split('\n');
+        const nestedProcessed: string[] = [];
+        let inNested = false;
+        let nestedContent: string[] = [];
+
+        for (const nestedLine of nestedLines) {
+          if (nestedLine.startsWith('> ')) {
+            nestedContent.push(nestedLine.substring(2));
+            inNested = true;
+          } else {
+            if (inNested) {
+              nestedProcessed.push('<blockquote>' + nestedContent.join('\n') + '</blockquote>');
+              nestedContent = [];
+              inNested = false;
+            }
+            nestedProcessed.push(nestedLine);
+          }
+        }
+
+        if (inNested) {
+          nestedProcessed.push('<blockquote>' + nestedContent.join('\n') + '</blockquote>');
+        }
+
+        processedContent = nestedProcessed.join('\n');
+      }
+
+      processedLines.push('<blockquote>' + processedContent + '</blockquote>');
     }
 
     html = processedLines.join('\n');
