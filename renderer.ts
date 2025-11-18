@@ -196,6 +196,66 @@ export class ArticleRenderer {
   }
 
   /**
+   * Process markdown tables
+   */
+  private processTables(text: string): string {
+    const lines = text.split('\n');
+    const result: string[] = [];
+    let inTable = false;
+    let tableRows: string[] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const currentLine = lines[i];
+      if (!currentLine) continue;
+
+      const line = currentLine.trim();
+
+      // Check if this is a table row (contains pipes)
+      if (line.includes('|')) {
+        const nextLineRaw = i + 1 < lines.length ? lines[i + 1] : null;
+        const nextLine = nextLineRaw ? nextLineRaw.trim() : '';
+        const isHeaderSeparator = /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?\s*$/.test(nextLine);
+
+        if (!inTable) {
+          inTable = true;
+          tableRows = [];
+        }
+
+        // Skip separator rows
+        if (/^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?\s*$/.test(line)) {
+          continue;
+        }
+
+        const cells = line.split('|').map(cell => cell.trim()).filter(cell => cell);
+        const nextLineToCheck = i + 1 < lines.length ? lines[i + 1] : null;
+        const isHeader = isHeaderSeparator || (nextLineToCheck && /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?\s*$/.test(nextLineToCheck.trim()));
+
+        if (isHeader) {
+          const headerCells = cells.map(cell => `<th>${cell}</th>`).join('');
+          tableRows.push(`<tr>${headerCells}</tr>`);
+        } else {
+          const dataCells = cells.map(cell => `<td>${cell}</td>`).join('');
+          tableRows.push(`<tr>${dataCells}</tr>`);
+        }
+      } else {
+        if (inTable) {
+          // End of table
+          result.push('<table>' + tableRows.join('') + '</table>');
+          tableRows = [];
+          inTable = false;
+        }
+        result.push(line);
+      }
+    }
+
+    if (inTable && tableRows.length > 0) {
+      result.push('<table>' + tableRows.join('') + '</table>');
+    }
+
+    return result.join('\n');
+  }
+
+  /**
    * Render markdown content to HTML
    */
   private renderMarkdown(markdown: string): string {
@@ -233,6 +293,9 @@ export class ArticleRenderer {
     }
 
     html = processedLines.join('\n');
+
+    // Process tables
+    html = this.processTables(html);
 
     // Headers (from h5 to h1 to avoid conflicts)
     html = html.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
