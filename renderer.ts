@@ -272,17 +272,31 @@ export class ArticleRenderer {
     const processedLines: string[] = [];
     let inBlockquote = false;
     let blockquoteContent: string[] = [];
+    let isFirstLineInBlockquote = false;
 
     for (const line of lines) {
       if (line.startsWith('> ') || line.startsWith('&gt; ')) {
         const content = line.replace(/^(&gt;|>) /, '');
+
+        // Skip the first H1 in a blockquote (it duplicates the section title)
+        if (!inBlockquote) {
+          isFirstLineInBlockquote = true;
+          inBlockquote = true;
+        }
+
+        if (isFirstLineInBlockquote && content.startsWith('# ')) {
+          isFirstLineInBlockquote = false;
+          continue; // Skip this line
+        }
+
+        isFirstLineInBlockquote = false;
         blockquoteContent.push(content);
-        inBlockquote = true;
       } else {
         if (inBlockquote) {
           processedLines.push('<blockquote>' + blockquoteContent.join('\n') + '</blockquote>');
           blockquoteContent = [];
           inBlockquote = false;
+          isFirstLineInBlockquote = false;
         }
         processedLines.push(line);
       }
