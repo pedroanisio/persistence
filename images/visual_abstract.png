@@ -1,0 +1,134 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="emergeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8787;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="persistGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ecdc4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5ee7dd;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="40" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#2c3e50">
+    Ontological Inversion: From Emergence to Persistence
+  </text>
+
+  <!-- Left Side: Traditional Emergence View -->
+  <g transform="translate(50, 80)">
+    <rect x="0" y="0" width="320" height="460" fill="url(#emergeGrad)" rx="10" opacity="0.3"/>
+
+    <text x="160" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#c0392b">
+      TRADITIONAL VIEW
+    </text>
+    <text x="160" y="55" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">
+      (Emergence)
+    </text>
+
+    <!-- Starting point -->
+    <ellipse cx="160" cy="120" rx="100" ry="60" fill="#fff" stroke="#c0392b" stroke-width="3"/>
+    <text x="160" y="115" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#c0392b">
+      DEFAULT STATE:
+    </text>
+    <text x="160" y="135" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">
+      Chaos / Disorder
+    </text>
+
+    <!-- Arrow -->
+    <path d="M 160 190 L 160 240" stroke="#c0392b" stroke-width="3" fill="none" marker-end="url(#arrowRed)"/>
+    <text x="180" y="220" font-family="Arial, sans-serif" font-size="12" fill="#c0392b">
+      Construction
+    </text>
+
+    <!-- Question -->
+    <rect x="40" y="250" width="240" height="70" fill="#fff" stroke="#c0392b" stroke-width="2" rx="5"/>
+    <text x="160" y="275" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#c0392b">
+      THE MYSTERY:
+    </text>
+    <text x="160" y="295" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#2c3e50">
+      "How does complex order
+    </text>
+    <text x="160" y="310" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#2c3e50">
+      emerge from chaos?"
+    </text>
+
+    <!-- Arrow -->
+    <path d="M 160 330 L 160 360" stroke="#c0392b" stroke-width="3" fill="none" marker-end="url(#arrowRed)"/>
+
+    <!-- Result -->
+    <ellipse cx="160" cy="405" rx="100" ry="40" fill="#fff" stroke="#c0392b" stroke-width="3"/>
+    <text x="160" y="410" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#c0392b">
+      Complex Order
+    </text>
+    <text x="160" y="425" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">
+      (requires explanation)
+    </text>
+  </g>
+
+  <!-- Right Side: Persistence View -->
+  <g transform="translate(430, 80)">
+    <rect x="0" y="0" width="320" height="460" fill="url(#persistGrad)" rx="10" opacity="0.3"/>
+
+    <text x="160" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#16a085">
+      NEW FRAMEWORK
+    </text>
+    <text x="160" y="55" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#2c3e50">
+      (Persistence)
+    </text>
+
+    <!-- Starting point -->
+    <ellipse cx="160" cy="120" rx="100" ry="60" fill="#fff" stroke="#16a085" stroke-width="3"/>
+    <text x="160" y="115" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#16a085">
+      GIVEN FACT:
+    </text>
+    <text x="160" y="135" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">
+      Something Must Exist
+    </text>
+
+    <!-- Arrow -->
+    <path d="M 160 190 L 160 240" stroke="#16a085" stroke-width="3" fill="none" marker-end="url(#arrowGreen)"/>
+    <text x="190" y="220" font-family="Arial, sans-serif" font-size="12" fill="#16a085">
+      Selection
+    </text>
+
+    <!-- Question -->
+    <rect x="40" y="250" width="240" height="70" fill="#fff" stroke="#16a085" stroke-width="2" rx="5"/>
+    <text x="160" y="275" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#16a085">
+      THE QUESTION:
+    </text>
+    <text x="160" y="295" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#2c3e50">
+      "What configurations are
+    </text>
+    <text x="160" y="310" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#2c3e50">
+      stable enough to persist?"
+    </text>
+
+    <!-- Arrow -->
+    <path d="M 160 330 L 160 360" stroke="#16a085" stroke-width="3" fill="none" marker-end="url(#arrowGreen)"/>
+
+    <!-- Result -->
+    <ellipse cx="160" cy="405" rx="100" ry="40" fill="#fff" stroke="#16a085" stroke-width="3"/>
+    <text x="160" y="410" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#16a085">
+      Observed Order
+    </text>
+    <text x="160" y="425" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">
+      (what remained stable)
+    </text>
+  </g>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c0392b" />
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#16a085" />
+    </marker>
+  </defs>
+
+  <!-- Bottom note -->
+  <text x="400" y="575" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#7f8c8d" font-style="italic">
+    The persistence framework inverts the ontology: stability is fundamental, not construction
+  </text>
+</svg>

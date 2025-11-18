@@ -1,0 +1,101 @@
+<svg width="600" height="500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="valley1" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#4169e1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:0.4" />
+    </radialGradient>
+    <radialGradient id="valley2" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#4169e1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:0.3" />
+    </radialGradient>
+    <linearGradient id="mountain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b4513;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#cd853f;stop-opacity:0.5" />
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="300" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#2c3e50">
+    Neural Network Loss Landscape
+  </text>
+  <text x="300" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#7f8c8d">
+    3D Visualization: Height = Error (Loss)
+  </text>
+
+  <!-- Base plane -->
+  <ellipse cx="300" cy="400" rx="250" ry="80" fill="#ecf0f1" opacity="0.5"/>
+
+  <!-- Mountain peaks (high error regions) -->
+  <ellipse cx="150" cy="200" rx="60" ry="80" fill="url(#mountain)"/>
+  <ellipse cx="450" cy="180" rx="50" ry="70" fill="url(#mountain)"/>
+  <ellipse cx="320" cy="160" rx="40" ry="60" fill="url(#mountain)"/>
+
+  <!-- Valley 1 (low error basin) -->
+  <ellipse cx="200" cy="320" rx="90" ry="60" fill="url(#valley1)"/>
+  <text x="200" y="330" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white" font-weight="bold">
+    Solution A
+  </text>
+  <text x="200" y="345" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    (Local Minimum)
+  </text>
+
+  <!-- Valley 2 (low error basin) -->
+  <ellipse cx="420" cy="340" rx="100" ry="70" fill="url(#valley2)"/>
+  <text x="420" y="350" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white" font-weight="bold">
+    Solution B
+  </text>
+  <text x="420" y="365" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white">
+    (Local Minimum)
+  </text>
+
+  <!-- Central deep valley -->
+  <ellipse cx="310" cy="360" rx="70" ry="50" fill="#0f3460" opacity="0.9"/>
+  <text x="310" y="365" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="white" font-weight="bold">
+    Global
+  </text>
+  <text x="310" y="378" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="white" font-weight="bold">
+    Minimum
+  </text>
+
+  <!-- Gradient descent paths -->
+  <path d="M 160 140 Q 170 200, 190 310" stroke="#e74c3c" stroke-width="3" fill="none" stroke-dasharray="5,5" marker-end="url(#arrowRed2)"/>
+  <path d="M 460 150 Q 450 220, 430 330" stroke="#27ae60" stroke-width="3" fill="none" stroke-dasharray="5,5" marker-end="url(#arrowGreen2)"/>
+
+  <!-- Starting points -->
+  <circle cx="160" cy="140" r="6" fill="#e74c3c"/>
+  <text x="140" y="130" font-family="Arial, sans-serif" font-size="10" fill="#e74c3c">Start 1</text>
+  <circle cx="460" cy="150" r="6" fill="#27ae60"/>
+  <text x="470" y="145" font-family="Arial, sans-serif" font-size="10" fill="#27ae60">Start 2</text>
+
+  <!-- Annotations -->
+  <g transform="translate(40, 100)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="11" fill="#7f8c8d">High Error</text>
+    <text x="0" y="15" font-family="Arial, sans-serif" font-size="11" fill="#7f8c8d">(Poor Performance)</text>
+    <line x1="50" y1="5" x2="90" y2="80" stroke="#7f8c8d" stroke-width="1" stroke-dasharray="2,2"/>
+  </g>
+
+  <g transform="translate(480, 380)">
+    <line x1="-40" y1="-20" x2="-5" y2="-5" stroke="#7f8c8d" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="11" fill="#7f8c8d">Low Error</text>
+    <text x="0" y="15" font-family="Arial, sans-serif" font-size="11" fill="#7f8c8d">(Good Performance)</text>
+  </g>
+
+  <!-- Key insight box -->
+  <rect x="50" y="440" width="500" height="50" fill="#d5f4e6" stroke="#27ae60" stroke-width="2" rx="5"/>
+  <text x="300" y="460" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#27ae60">
+    Key Insight: Valleys are connected basins, not isolated points
+  </text>
+  <text x="300" y="478" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#2c3e50">
+    Training finds stable, persistent regions of low error through gradient descent
+  </text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowRed2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L7,3 z" fill="#e74c3c" />
+    </marker>
+    <marker id="arrowGreen2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L7,3 z" fill="#27ae60" />
+    </marker>
+  </defs>
+</svg>

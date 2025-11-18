@@ -1,0 +1,85 @@
+<svg width="600" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="300" y="30" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#2c3e50">
+    Double-Slit Experiment: Real Quantum Interference
+  </text>
+
+  <!-- Source (Particle/Wave) -->
+  <circle cx="50" cy="250" r="15" fill="#e74c3c"/>
+  <text x="50" y="285" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#2c3e50">
+    Particle
+  </text>
+  <text x="50" y="300" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#2c3e50">
+    Source
+  </text>
+
+  <!-- Waves emanating from source -->
+  <g opacity="0.3">
+    <circle cx="50" cy="250" r="30" fill="none" stroke="#3498db" stroke-width="2"/>
+    <circle cx="50" cy="250" r="50" fill="none" stroke="#3498db" stroke-width="2"/>
+    <circle cx="50" cy="250" r="70" fill="none" stroke="#3498db" stroke-width="2"/>
+  </g>
+
+  <!-- Barrier with two slits -->
+  <rect x="220" y="100" width="20" height="120" fill="#34495e"/>
+  <rect x="220" y="280" width="20" height="120" fill="#34495e"/>
+
+  <!-- Slit labels -->
+  <text x="250" y="232" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50">Slit 1</text>
+  <text x="250" y="267" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50">Slit 2</text>
+
+  <!-- Wave paths from source to slits -->
+  <path d="M 65 250 Q 145 220, 230 220" fill="none" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5"/>
+  <path d="M 65 250 Q 145 260, 230 260" fill="none" stroke="#3498db" stroke-width="2" stroke-dasharray="5,5"/>
+
+  <!-- Waves from slits -->
+  <g opacity="0.4">
+    <!-- From slit 1 -->
+    <ellipse cx="230" cy="220" rx="80" ry="40" fill="none" stroke="#3498db" stroke-width="1.5"/>
+    <ellipse cx="230" cy="220" rx="120" ry="60" fill="none" stroke="#3498db" stroke-width="1.5"/>
+    <ellipse cx="230" cy="220" rx="160" ry="80" fill="none" stroke="#3498db" stroke-width="1.5"/>
+
+    <!-- From slit 2 -->
+    <ellipse cx="230" cy="260" rx="80" ry="40" fill="none" stroke="#9b59b6" stroke-width="1.5"/>
+    <ellipse cx="230" cy="260" rx="120" ry="60" fill="none" stroke="#9b59b6" stroke-width="1.5"/>
+    <ellipse cx="230" cy="260" rx="160" ry="80" fill="none" stroke="#9b59b6" stroke-width="1.5"/>
+  </g>
+
+  <!-- Detection screen -->
+  <rect x="480" y="100" width="15" height="300" fill="#95a5a6"/>
+  <text x="515" y="255" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">Screen</text>
+
+  <!-- Interference pattern on screen -->
+  <g>
+    <rect x="500" y="150" width="30" height="15" fill="#2c3e50" opacity="0.9"/>
+    <rect x="500" y="175" width="30" height="8" fill="#2c3e50" opacity="0.3"/>
+    <rect x="500" y="195" width="30" height="18" fill="#2c3e50" opacity="1"/>
+    <rect x="500" y="223" width="30" height="10" fill="#2c3e50" opacity="0.4"/>
+    <rect x="500" y="243" width="30" height="20" fill="#2c3e50" opacity="1"/>
+    <rect x="500" y="273" width="30" height="8" fill="#2c3e50" opacity="0.3"/>
+    <rect x="500" y="291" width="30" height="16" fill="#2c3e50" opacity="0.9"/>
+  </g>
+
+  <!-- Labels and annotations -->
+  <text x="300" y="80" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#16a085">
+    Superposition of Paths
+  </text>
+
+  <!-- Explanation box -->
+  <rect x="50" y="350" width="500" height="130" fill="#ecf0f1" stroke="#95a5a6" stroke-width="2" rx="5"/>
+  <text x="300" y="375" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#2c3e50">
+    Key Features of Real Interference:
+  </text>
+  <text x="60" y="400" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">
+    • Particles exist in superposition - pass through BOTH slits simultaneously
+  </text>
+  <text x="60" y="420" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">
+    • Probability amplitudes (complex numbers) add before squaring
+  </text>
+  <text x="60" y="440" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">
+    • Phase relationships create constructive/destructive interference
+  </text>
+  <text x="60" y="460" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">
+    • Results in striped pattern - particles appear where waves reinforce
+  </text>
+</svg>
