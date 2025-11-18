@@ -56,7 +56,7 @@ export interface Author {
 export interface BaseSection {
   readonly id: string;
   readonly title: string;
-  readonly content: string;
+  readonly content?: string;
   readonly type?: SectionType;
   readonly difficulty?: DifficultyLevel;
   readonly file?: string;
