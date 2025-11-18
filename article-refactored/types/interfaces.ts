@@ -70,14 +70,17 @@ export interface TitleSection extends BaseSection {
   readonly subtitle?: string;
 }
 
-export interface ContentSection extends BaseSection {
-  readonly type: SectionType.CONTENT;
+export interface DifficultySection extends BaseSection {
   readonly difficulty: DifficultyLevel;
   readonly subsections?: readonly SubSection[];
   readonly references?: readonly Reference[];
 }
 
-export interface ChapterSection extends ContentSection {
+export interface ContentSection extends DifficultySection {
+  readonly type: SectionType.CONTENT;
+}
+
+export interface ChapterSection extends DifficultySection {
   readonly type: SectionType.CHAPTER;
   readonly chapterNumber: number;
   readonly partNumber?: number;

@@ -3,7 +3,7 @@
  * Single Responsibility: Extract and manipulate article data
  */
 
-import { DifficultyLevel } from '../types/enums';
+import { DifficultyLevel, SectionType } from '../types/enums';
 import {
   ArticleData,
   Section,
@@ -19,7 +19,7 @@ import { isChapterSection, hasDifficulty } from '../guards/type-guards';
 export function extractAllReferences(article: ArticleData): readonly Reference[] {
   const references: Reference[] = [];
   article.sections.forEach(section => {
-    if ('references' in section && section.references) {
+    if (section.type !== SectionType.BIBLIOGRAPHY && 'references' in section && section.references) {
       references.push(...section.references);
     }
   });
