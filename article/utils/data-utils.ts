@@ -15,11 +15,14 @@ import { isChapterSection, hasDifficulty } from '../guards/type-guards';
 
 /**
  * Extract all references from a document
+ * Only extracts from ContentSection and ChapterSection (not BibliographySection)
  */
 export function extractAllReferences(article: ArticleData): readonly Reference[] {
   const references: Reference[] = [];
   article.sections.forEach(section => {
-    if ('references' in section && section.references) {
+    // Only extract from sections with difficulty (ContentSection/ChapterSection)
+    // This excludes BibliographySection which has BibliographyEntry[] instead
+    if (hasDifficulty(section) && section.references) {
       references.push(...section.references);
     }
   });

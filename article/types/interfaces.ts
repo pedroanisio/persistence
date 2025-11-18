@@ -77,10 +77,13 @@ export interface ContentSection extends BaseSection {
   readonly references?: readonly Reference[];
 }
 
-export interface ChapterSection extends ContentSection {
+export interface ChapterSection extends BaseSection {
   readonly type: SectionType.CHAPTER;
+  readonly difficulty: DifficultyLevel;
   readonly chapterNumber: number;
   readonly partNumber?: number;
+  readonly subsections?: readonly SubSection[];
+  readonly references?: readonly Reference[];
   readonly exercises?: readonly Exercise[];
   readonly keyTakeaways?: readonly string[];
 }
