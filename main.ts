@@ -1,6 +1,7 @@
 import type { ArticleData } from './article/index';
 import { validateArticleData } from './article/index';
 import { ArticleRenderer } from './renderer';
+import { PDFExporter } from './pdf-exporter';
 
 /**
  * Main application entry point
@@ -32,6 +33,9 @@ class App {
 
       // Setup navigation toggle
       this.setupNavigation();
+
+      // Setup PDF export
+      this.setupPDFExport();
 
     } catch (error) {
       console.error('❌ Failed to initialize app:', error);
@@ -172,6 +176,18 @@ class App {
       }
 
       errorMessage.textContent = message;
+    }
+  }
+
+  private setupPDFExport(): void {
+    const exportBtn = document.getElementById('export-pdf-btn');
+
+    if (exportBtn && this.article) {
+      const pdfExporter = new PDFExporter(this.article);
+
+      exportBtn.addEventListener('click', () => {
+        pdfExporter.exportToPDF();
+      });
     }
   }
 }
