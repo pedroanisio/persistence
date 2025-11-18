@@ -88,29 +88,98 @@ export class ArticleRenderer {
   private renderTableOfContents(): void {
     this.tocContainer.innerHTML = '';
 
+    // Group by parts if available
+    const parts = new Map<number, Section[]>();
+    const noPartSections: Section[] = [];
+
     this.article.sections.forEach((section) => {
-      const entry = document.createElement('div');
-      entry.className = 'toc-entry';
-      entry.dataset.sectionId = section.id;
-
-      const title = document.createElement('span');
-      title.className = 'toc-entry-title';
-      title.textContent = section.title;
-      entry.appendChild(title);
-
-      if ('difficulty' in section && section.difficulty) {
-        const badge = this.createDifficultyBadge(section.difficulty);
-        badge.style.fontSize = '0.7rem';
-        badge.style.padding = '0.2rem 0.5rem';
-        entry.appendChild(badge);
+      if ('partNumber' in section && typeof section.partNumber === 'number') {
+        if (!parts.has(section.partNumber)) {
+          parts.set(section.partNumber, []);
+        }
+        parts.get(section.partNumber)!.push(section);
+      } else {
+        noPartSections.push(section);
       }
-
-      entry.addEventListener('click', () => {
-        this.scrollToSection(section.id);
-      });
-
-      this.tocContainer.appendChild(entry);
     });
+
+    // Render sections without parts first
+    noPartSections.forEach(section => {
+      this.tocContainer.appendChild(this.createTOCEntry(section));
+    });
+
+    // Render sections grouped by parts
+    if (parts.size > 0) {
+      const partNames = ['', 'Foundations', 'The Framework', 'Applications', 'Implications', 'Toolkit'];
+      parts.forEach((sections, partNum) => {
+        // Part header
+        const partHeader = document.createElement('div');
+        partHeader.className = 'toc-part-header';
+        partHeader.textContent = `Part ${partNum}: ${partNames[partNum] || ''}`;
+        partHeader.style.cssText = `
+          font-weight: 600;
+          margin-top: 1rem;
+          padding: 0.5rem 0;
+          color: var(--orange-intermediate);
+          border-bottom: 1px solid var(--border-color, #e0e0e0);
+        `;
+        this.tocContainer.appendChild(partHeader);
+
+        // Part sections
+        sections.forEach(section => {
+          this.tocContainer.appendChild(this.createTOCEntry(section));
+        });
+      });
+    }
+  }
+
+  private createTOCEntry(section: Section): HTMLElement {
+    const entry = document.createElement('div');
+    entry.className = 'toc-entry';
+    entry.dataset.sectionId = section.id;
+
+    const title = document.createElement('span');
+    title.className = 'toc-entry-title';
+
+    // Add chapter number if available
+    if ('chapterNumber' in section && typeof section.chapterNumber === 'number') {
+      title.textContent = `${section.chapterNumber}. ${section.title}`;
+    } else {
+      title.textContent = section.title;
+    }
+
+    entry.appendChild(title);
+
+    const badges = document.createElement('span');
+    badges.className = 'toc-badges';
+    badges.style.display = 'flex';
+    badges.style.gap = '0.5rem';
+    badges.style.marginLeft = 'auto';
+
+    if ('difficulty' in section && section.difficulty) {
+      const badge = this.createDifficultyBadge(section.difficulty);
+      badge.style.fontSize = '0.7rem';
+      badge.style.padding = '0.2rem 0.5rem';
+      badges.appendChild(badge);
+    }
+
+    if (section.metadata?.estimatedReadingTime) {
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'toc-reading-time';
+      timeSpan.textContent = `${section.metadata.estimatedReadingTime}m`;
+      timeSpan.style.cssText = 'font-size: 0.75rem; color: #666; opacity: 0.8;';
+      badges.appendChild(timeSpan);
+    }
+
+    if (badges.children.length > 0) {
+      entry.appendChild(badges);
+    }
+
+    entry.addEventListener('click', () => {
+      this.scrollToSection(section.id);
+    });
+
+    return entry;
   }
 
   /**
@@ -160,6 +229,29 @@ export class ArticleRenderer {
       readingTime.className = 'reading-time';
       readingTime.textContent = `${section.metadata.estimatedReadingTime} min read`;
       meta.appendChild(readingTime);
+    }
+
+    // Add tags
+    if (section.metadata?.tags && section.metadata.tags.length > 0) {
+      const tagsContainer = document.createElement('span');
+      tagsContainer.className = 'section-tags';
+      tagsContainer.style.cssText = 'display: flex; gap: 0.5rem; margin-left: 1rem;';
+
+      section.metadata.tags.slice(0, 3).forEach(tag => {
+        const tagBadge = document.createElement('span');
+        tagBadge.className = 'tag-badge';
+        tagBadge.textContent = tag;
+        tagBadge.style.cssText = `
+          font-size: 0.7rem;
+          padding: 0.2rem 0.6rem;
+          background: #f0f0f0;
+          border-radius: 12px;
+          color: #555;
+        `;
+        tagsContainer.appendChild(tagBadge);
+      });
+
+      meta.appendChild(tagsContainer);
     }
 
     if (meta.children.length > 0) {
@@ -468,6 +560,82 @@ export class ArticleRenderer {
       takeaways.appendChild(list);
 
       container.appendChild(takeaways);
+    }
+
+    // Render references
+    if (chapter.references && chapter.references.length > 0) {
+      const refsContainer = document.createElement('div');
+      refsContainer.className = 'section-references';
+      refsContainer.style.cssText = `
+        background: linear-gradient(135deg, #fff8f0 0%, #ffe4c4 100%);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+        border-left: 4px solid var(--orange-intermediate);
+      `;
+
+      const title = document.createElement('h3');
+      title.textContent = '📚 References';
+      title.style.marginTop = '0';
+      title.style.color = 'var(--orange-intermediate)';
+      refsContainer.appendChild(title);
+
+      const list = document.createElement('ol');
+      list.style.marginTop = '1rem';
+      chapter.references.forEach(ref => {
+        const item = document.createElement('li');
+        item.textContent = ref.text;
+        item.style.marginBottom = '0.5rem';
+        item.style.fontSize = '0.9rem';
+        list.appendChild(item);
+      });
+      refsContainer.appendChild(list);
+
+      container.appendChild(refsContainer);
+    }
+
+    // Render exercises
+    if (chapter.exercises && chapter.exercises.length > 0) {
+      const exercisesContainer = document.createElement('div');
+      exercisesContainer.className = 'section-exercises';
+      exercisesContainer.style.cssText = `
+        background: linear-gradient(135deg, #fff0f8 0%, #ffc6e4 100%);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+        border-left: 4px solid var(--red-advanced);
+      `;
+
+      const title = document.createElement('h3');
+      title.textContent = '💡 Exercises';
+      title.style.marginTop = '0';
+      title.style.color = 'var(--red-advanced)';
+      exercisesContainer.appendChild(title);
+
+      chapter.exercises.forEach(exercise => {
+        const exerciseDiv = document.createElement('div');
+        exerciseDiv.style.marginTop = '1rem';
+
+        const exerciseTitle = document.createElement('h4');
+        exerciseTitle.textContent = exercise.title;
+        exerciseTitle.style.marginBottom = '0.5rem';
+        exerciseDiv.appendChild(exerciseTitle);
+
+        const description = document.createElement('p');
+        description.textContent = exercise.description;
+        description.style.fontSize = '0.9rem';
+        exerciseDiv.appendChild(description);
+
+        if ('difficulty' in exercise && exercise.difficulty) {
+          const badge = this.createDifficultyBadge(exercise.difficulty);
+          badge.style.marginTop = '0.5rem';
+          exerciseDiv.appendChild(badge);
+        }
+
+        exercisesContainer.appendChild(exerciseDiv);
+      });
+
+      container.appendChild(exercisesContainer);
     }
   }
 

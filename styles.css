@@ -152,6 +152,33 @@ body {
   font-weight: 500;
 }
 
+.toc-part-header {
+  font-weight: 600;
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  color: var(--orange-intermediate);
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-tags {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  flex-wrap: wrap;
+}
+
+.tag-badge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  background: #f0f0f0;
+  border-radius: 12px;
+  color: #555;
+  white-space: nowrap;
+}
+
 /* Main Content */
 .main-content {
   margin-left: var(--nav-width);
