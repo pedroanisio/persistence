@@ -1,17 +1,15 @@
 /**
- * Article Type System - Refactored for SOLID & DRY Principles
+ * Article Type System
  *
- * This is the main entry point providing a clean public API
+ * Main entry point providing a clean public API
  *
- * @version 4.0.0 (Refactored)
+ * @version 4.0.0
  * @strict
  *
- * Key Improvements:
- * - Modular architecture (11 focused files vs 1 mega-file)
- * - Reduced code duplication by ~40%
+ * Architecture:
+ * - Modular architecture with focused, single-responsibility modules
  * - Open/Closed Principle compliance (extensible validation & queries)
- * - Factory functions for type guards (72% code reduction)
- * - deepFreeze utility (66% code reduction in factories)
+ * - Factory functions for type guards
  * - Plugin architecture for DocumentModel
  */
 

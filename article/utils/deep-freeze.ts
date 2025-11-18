@@ -3,7 +3,6 @@
  * Single Responsibility: Provide immutability utilities
  *
  * Eliminates Object.freeze() duplication in factory functions
- * Reduces ~60 lines of repetitive code
  */
 
 import { DeepReadonly } from '../types/utility-types';

@@ -3,16 +3,16 @@ import type {
   Section,
   ChapterSection,
   DifficultyLevel,
-} from './article-refactored';
+} from './article';
 
 import {
   isChapterSection,
   DIFFICULTY_BADGES,
   getTotalReadingTime,
-} from './article-refactored';
+} from './article';
 
 /**
- * Renderer class for the Article system using the refactored modular architecture
+ * Renderer class for the Article system
  */
 export class ArticleRenderer {
   private article: ArticleData;

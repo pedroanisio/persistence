@@ -26,7 +26,7 @@
   },
   "include": [
     "*.ts",
-    "article-refactored/**/*.ts"
+    "article/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

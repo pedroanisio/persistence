@@ -1,25 +1,25 @@
 # Article Renderer
 
-A modern, type-safe article rendering application built with TypeScript and Vite, using the refactored modular article type system.
+A modern, type-safe article rendering application built with TypeScript and Vite.
 
-## 🚀 Features
+## Features
 
-- **Type-Safe**: Built with TypeScript using the refactored SOLID-compliant article type system
-- **Modular Architecture**: Uses the article-refactored module structure (88/100 SOLID score)
+- **Type-Safe**: Built with TypeScript and strict type checking
+- **Modular Architecture**: Clean separation of concerns with focused modules
 - **Responsive Design**: Mobile-friendly with collapsible navigation
 - **Table of Contents**: Auto-generated with scroll spy for active section tracking
-- **Difficulty Badges**: Visual indicators for content difficulty levels (Green/Orange/Red)
+- **Difficulty Badges**: Visual indicators for content difficulty levels
 - **Reading Time**: Estimated reading times for each section
 - **Markdown Support**: Simple markdown rendering for content
 - **Persistent State**: Remembers navigation preferences in localStorage
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install
 ```
 
-## 🏃 Development
+## Development
 
 Start the development server:
 
@@ -29,7 +29,7 @@ npm run dev
 
 The app will be available at [http://localhost:3000](http://localhost:3000)
 
-## 🏗️ Build
+## Build
 
 Build for production:
 
@@ -43,29 +43,29 @@ Preview the production build:
 npm run preview
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-article-1/
-├── article-refactored/       # Modular type system (SOLID compliant)
-│   ├── types/               # Enums, interfaces, utility types
-│   ├── guards/              # Type guards
-│   ├── validation/          # Validation rules
-│   ├── utils/               # Utilities and factories
-│   ├── constants/           # Default configurations
-│   ├── models/              # DocumentModel class
-│   └── index.ts             # Public API
-├── article.json             # Article content data
-├── index.html               # HTML entry point
-├── main.ts                  # Application initialization
-├── renderer.ts              # Article rendering logic
-├── styles.css               # Styling
-├── tsconfig.json            # TypeScript configuration
-├── vite.config.ts           # Vite configuration
-└── package.json             # Dependencies
+persistence/
+├── article/                 # Type system and utilities
+│   ├── types/              # Enums, interfaces, utility types
+│   ├── guards/             # Type guards
+│   ├── validation/         # Validation rules
+│   ├── utils/              # Utilities and factories
+│   ├── constants/          # Default configurations
+│   ├── models/             # DocumentModel class
+│   └── index.ts            # Public API
+├── article.json            # Article content data
+├── index.html              # HTML entry point
+├── main.ts                 # Application initialization
+├── renderer.ts             # Article rendering logic
+├── styles.css              # Styling
+├── tsconfig.json           # TypeScript configuration
+├── vite.config.ts          # Vite configuration
+└── package.json            # Dependencies
 ```
 
-## 🎨 Features in Detail
+## Features in Detail
 
 ### Navigation
 - Fixed sidebar with table of contents
@@ -85,25 +85,23 @@ article-1/
 - Smooth scrolling
 - Print-friendly styles
 
-## 🔧 Technical Details
+## Type System
 
-### Type System
-Uses the refactored article type system with:
-- 11 focused modules vs 1 mega-file
-- 72% less code in type guards (factory pattern)
-- 66% less code in factories (deepFreeze utility)
-- Open/Closed principle compliance
+The application uses a modular type system with:
+- Composable validation rules
+- Runtime type checking
 - Plugin architecture for extensibility
+- Immutable data structures
 
 ### Validation
-Article data is validated on load using:
+Article data is validated on load:
 - Runtime type checking
 - Business rule validation
 - Unique section IDs
 - Sequential chapter numbering
 - Valid prerequisite references
 
-## 📊 Data Format
+## Data Format
 
 The app loads and validates `article.json` which must conform to the `ArticleData` interface:
 
@@ -113,22 +111,11 @@ interface ArticleData {
   readonly version: string;
   readonly metadata: DocumentMetadata;
   readonly sections: readonly Section[];
-  // ... additional optional properties
 }
 ```
 
-## 🎯 Browser Support
+## Browser Support
 
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - ES2020+ required
 - CSS Grid and Flexbox support required
-
-## 📝 License
-
-Same as original article.ts
-
-## 🤝 Credits
-
-- Built with [Vite](https://vitejs.dev/)
-- Type system refactored for SOLID principles
-- Renderer created by Claude Code
