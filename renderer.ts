@@ -161,13 +161,6 @@ export class ArticleRenderer {
       badges.appendChild(badge);
     }
 
-    if (section.metadata?.estimatedReadingTime) {
-      const timeSpan = document.createElement('span');
-      timeSpan.className = 'toc-reading-time';
-      timeSpan.textContent = `${section.metadata.estimatedReadingTime}m`;
-      timeSpan.style.cssText = 'font-size: 0.75rem; color: #666; opacity: 0.8;';
-      badges.appendChild(timeSpan);
-    }
 
     if (badges.children.length > 0) {
       entry.appendChild(badges);
@@ -222,12 +215,6 @@ export class ArticleRenderer {
       meta.appendChild(badge);
     }
 
-    if (section.metadata?.estimatedReadingTime) {
-      const readingTime = document.createElement('span');
-      readingTime.className = 'reading-time';
-      readingTime.textContent = `${section.metadata.estimatedReadingTime} min read`;
-      meta.appendChild(readingTime);
-    }
 
     // Add tags
     if (section.metadata?.tags && section.metadata.tags.length > 0) {
