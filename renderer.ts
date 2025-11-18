@@ -8,7 +8,6 @@ import type {
 import {
   isChapterSection,
   DIFFICULTY_BADGES,
-  getTotalReadingTime,
 } from './article/index';
 
 /**
@@ -40,7 +39,6 @@ export class ArticleRenderer {
     this.renderTableOfContents();
     this.renderSections();
     this.setupScrollSpy();
-    this.updateFooter();
   }
 
   /**
@@ -690,25 +688,4 @@ export class ArticleRenderer {
     }
   }
 
-  /**
-   * Update footer with reading time
-   */
-  private updateFooter(): void {
-    const totalTime = getTotalReadingTime(this.article);
-    const timeElement = document.getElementById('total-time');
-
-    if (timeElement && totalTime > 0) {
-      const hours = Math.floor(totalTime / 60);
-      const minutes = totalTime % 60;
-
-      let timeStr = '';
-      if (hours > 0) {
-        timeStr = `${hours}h ${minutes}min total reading time`;
-      } else {
-        timeStr = `${minutes}min total reading time`;
-      }
-
-      timeElement.textContent = timeStr;
-    }
-  }
 }
