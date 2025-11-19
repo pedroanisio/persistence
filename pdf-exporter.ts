@@ -53,66 +53,83 @@ export class PDFExporter {
       for (let i = 0; i < sections.length; i++) {
         const section = sections[i] as HTMLElement;
 
-        if (currentY > pageHeight - margin) {
+        if (currentY > pageHeight - margin - 20) {
           pdf.addPage();
           currentY = margin;
         }
 
         const canvas = await html2canvas(section, {
-          scale: 2,
+          scale: 1,
           useCORS: true,
           logging: false,
           width: section.scrollWidth,
           height: section.scrollHeight,
+          backgroundColor: '#ffffff',
         });
 
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/jpeg', 0.85);
         const imgWidth = contentWidth;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        let remainingHeight = imgHeight;
-        let sourceY = 0;
-
-        while (remainingHeight > 0) {
-          const availableHeight = pageHeight - currentY - margin;
-
-          if (remainingHeight <= availableHeight) {
-            pdf.addImage(
-              imgData,
-              'PNG',
-              margin,
-              currentY,
-              imgWidth,
-              remainingHeight,
-              undefined,
-              'FAST',
-              0,
-              -sourceY
-            );
-            currentY += remainingHeight;
-            remainingHeight = 0;
-          } else {
-            pdf.addImage(
-              imgData,
-              'PNG',
-              margin,
-              currentY,
-              imgWidth,
-              availableHeight,
-              undefined,
-              'FAST',
-              0,
-              -sourceY
-            );
-
-            sourceY += availableHeight;
-            remainingHeight -= availableHeight;
-            pdf.addPage();
-            currentY = margin;
-          }
+        if (currentY + imgHeight > pageHeight - margin) {
+          pdf.addPage();
+          currentY = margin;
         }
 
-        currentY += 10;
+        if (imgHeight > pageHeight - (margin * 2)) {
+          const numPages = Math.ceil(imgHeight / (pageHeight - (margin * 2)));
+          const sliceHeight = canvas.height / numPages;
+
+          for (let j = 0; j < numPages; j++) {
+            if (j > 0) {
+              pdf.addPage();
+              currentY = margin;
+            }
+
+            const sliceCanvas = document.createElement('canvas');
+            sliceCanvas.width = canvas.width;
+            sliceCanvas.height = sliceHeight;
+            const ctx = sliceCanvas.getContext('2d');
+
+            if (ctx) {
+              ctx.drawImage(
+                canvas,
+                0, j * sliceHeight,
+                canvas.width, sliceHeight,
+                0, 0,
+                canvas.width, sliceHeight
+              );
+
+              const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.85);
+              const sliceImgHeight = (sliceHeight * imgWidth) / canvas.width;
+
+              pdf.addImage(
+                sliceData,
+                'JPEG',
+                margin,
+                currentY,
+                imgWidth,
+                sliceImgHeight,
+                undefined,
+                'FAST'
+              );
+
+              currentY = margin;
+            }
+          }
+        } else {
+          pdf.addImage(
+            imgData,
+            'JPEG',
+            margin,
+            currentY,
+            imgWidth,
+            imgHeight,
+            undefined,
+            'FAST'
+          );
+          currentY += imgHeight + 10;
+        }
       }
 
       const fileName = `${this.article.title.toLowerCase().replace(/\s+/g, '-')}.pdf`;
