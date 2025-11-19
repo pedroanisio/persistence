@@ -254,7 +254,14 @@ export class ArticleRenderer {
     content.className = 'section-content';
 
     if (section.blocks && section.blocks.length > 0) {
-      const blocksFragment = this.blockRenderer.renderBlocks(section.blocks);
+      // Skip the first block if it's an h1 heading that matches the section title
+      let blocksToRender = section.blocks;
+      const firstBlock = section.blocks[0];
+      if (firstBlock && 'variant' in firstBlock && firstBlock.variant === 'heading' &&
+          'level' in firstBlock && firstBlock.level === 1) {
+        blocksToRender = section.blocks.slice(1);
+      }
+      const blocksFragment = this.blockRenderer.renderBlocks(blocksToRender);
       content.appendChild(blocksFragment);
     } else {
       content.innerHTML = this.renderMarkdown(section.content);
