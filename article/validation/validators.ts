@@ -41,11 +41,19 @@ export const hasUniqueSectionIds: ValidationRule<ArticleData> = (data) => {
 };
 
 /**
- * Rule: Chapter numbers must be sequential
+ * Rule: Chapter numbers must be sequential (if present)
  */
 export const hasSequentialChapters: ValidationRule<ArticleData> = (data) => {
   const chapters = data.sections.filter(isChapterSection);
-  const chapterNumbers = chapters.map(ch => ch.chapterNumber).sort((a, b) => a - b);
+  const chapterNumbers = chapters
+    .map(ch => ch.chapterNumber)
+    .filter(num => num !== undefined);
+
+  if (chapterNumbers.length === 0) {
+    return;
+  }
+
+  chapterNumbers.sort((a, b) => a - b);
 
   for (let i = 0; i < chapterNumbers.length; i++) {
     if (chapterNumbers[i] !== i + 1) {
