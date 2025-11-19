@@ -58,7 +58,7 @@ export interface BaseSection {
   readonly title: string;
   readonly content?: string;
   readonly type?: SectionType;
-  readonly difficulty?: DifficultyLevel;
+  readonly difficulty?: DifficultyLevel | null;
   readonly file?: string;
   readonly metadata?: SectionMetadata;
   readonly blocks?: readonly ContentBlock[];

@@ -82,7 +82,7 @@ export function isValidSection(value: unknown): value is Section {
     typeof section.title === 'string' &&
     (section.content === undefined || typeof section.content === 'string') &&
     (section.type === undefined || isSectionType(section.type)) &&
-    (section.difficulty === undefined || isDifficultyLevel(section.difficulty))
+    (section.difficulty === undefined || section.difficulty === null || isDifficultyLevel(section.difficulty))
   );
 }
 
